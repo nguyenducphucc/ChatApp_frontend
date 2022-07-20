@@ -1,0 +1,128 @@
+.emoji-picker-react .emoji-categories {
+    background: #35403a;
+    padding: 0 18px;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+aside.emoji-picker-react {
+    position: absolute;
+
+    background: rgb(46, 46, 50);
+    flex-direction: column;
+    height: 325px;
+    width: 400px;
+    font-family: "Lato", sans-serif;
+    border: 2px solid #202422;
+    border-radius: 5px;
+    box-sizing: border-box;
+    box-shadow: none;
+    overflow: hidden;
+    position: relative;
+    padding: 0px 0px 10px 0px;
+    margin-bottom: 10px;
+    z-index: -2;
+}
+
+.emoji-picker-react .emoji-group:before {
+    content: attr(data-name);
+    color: rgb(223, 243, 231);
+    font-size: 12px;
+    padding-left: 8px;
+    position: sticky;
+    background: rgba(63, 63, 65, 0.749);
+    border-radius: 5px;
+    width: 100%;
+    z-index: 1;
+    top: 0;
+    text-transform: uppercase;
+    line-height: 30px;
+    font-weight: 600;
+}
+
+.emoji-picker-react .emoji-scroll-wrapper {
+    overflow-y: scroll;
+    position: relative;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.emoji-picker-react .emoji-scroll-wrapper::-webkit-scrollbar {
+    width: 4px;
+}
+
+.emoji-picker-react .emoji-scroll-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.emoji-picker-react .emoji-scroll-wrapper::-webkit-scrollbar-thumb {
+    background-color: #454545;
+    border-radius: 2px;
+}
+
+.emoji-picker-react input.emoji-search {
+    width: calc(100% - 35px);
+    margin-left: 15px;
+    outline: none;
+    box-shadow: none;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #efefef;
+    border-radius: 3px;
+    transition: border .1s;
+    display: none;
+}
+
+.emoji-picker-react ul.skin-tones-list {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    position: absolute;
+    top: 13px;
+    right: 40px;
+    display: none;
+}
+
+.emote_toggle {
+    position: relative;
+    top: 0%;
+    right: -10px;
+
+    width: 100%;
+    object-fit:contain;
+    max-width: 35px;
+    cursor: pointer;
+    opacity: 0.5;
+    transform: scale(0.95);
+
+    transition: ease-in-out 125ms;
+}
+
+.emote_toggle:hover {
+    transform: scale(1.2);
+    opacity: 0.6;
+}
+
+.emote_picker_container {
+    position: absolute;
+    right: 0px;
+    bottom: 2px;
+
+    display: flex;
+    flex-direction: column;
+    min-height:38px;
+    min-width: 398px;
+    z-index: -1;
+
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.EmojiPiacker_container {
+    position: absolute;
+    right: -15px;
+    bottom: 40px;
+    z-index: -1;
+}

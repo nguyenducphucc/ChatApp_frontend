@@ -1,0 +1,46 @@
+.image_view_main {
+    background-color: transparent;
+    
+    position: absolute;
+    left: 0%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    
+    
+    z-index: 50;
+
+    color: rgb(210, 210, 210);
+}
+
+.image_view_container {
+    background-color: rgba(22, 34, 46, 0.98);
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image_view_content {
+    position: relative;
+    width: 100%;
+    max-width: 50%;
+    max-height: 90%;
+    object-fit:contain;
+}
+
+.image_view_close {
+    position: absolute;
+    top: 0.5%;
+    right: 1.5%;
+    cursor: pointer;
+
+    font-family: "Lato", sans-serif;
+    font-size: 35px;
+    color: rgb(203, 202, 202);
+}
+
+.image_view_close:hover {
+    color: rgb(244, 244, 244);
+}

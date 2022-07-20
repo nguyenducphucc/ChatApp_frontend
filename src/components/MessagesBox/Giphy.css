@@ -1,0 +1,66 @@
+.gif_main {
+    position:relative;
+
+    right: 550px;
+    top: 2px;
+    
+    min-width: 600px;
+    z-index: -4;
+
+    width: min-content;
+    min-height: 434px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.gif_input {
+    width: 580px;
+    padding: 6px 10px 6px 10px;
+    margin-bottom: 6px;
+
+    background: rgb(62, 60, 64);
+    border-style: none;
+    border-radius: 5px;
+
+    font-size: 15px;
+    font-family: "Lato", sans-serif;
+    color: rgb(245, 244, 244);
+}
+
+.gif_input:focus {
+    outline: none;
+}
+
+.gif_container {
+    overflow: scroll;
+    overflow-x: hidden;
+
+    background: rgba(74, 7, 243, 0.037);
+    border-radius: 5px;
+    height: 350px;
+    width: min-content;
+    opacity: 0.9;
+    margin-bottom: 10px;
+}
+
+.gif_container::-webkit-scrollbar {
+    width: 0;
+}
+
+.gif_icon {
+    position: relative;
+    width: 40px;
+    transform: scale(1.1);
+    cursor:pointer;
+    transform: scale(0.95);
+    opacity: 0.5;
+
+    transition: ease-in-out 125ms;
+}
+
+.gif_icon:hover {
+    transform: scale(1.15);
+}

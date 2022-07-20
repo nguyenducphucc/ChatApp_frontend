@@ -1,0 +1,70 @@
+.main-error-background {
+    position: absolute;
+    bottom: 69.5%;
+    left: 78.5%;
+
+    background-image: linear-gradient(to left top, #f94d05, #fa4603, #fc3e01, #fd3600, #fe2b00, #fe2c00, #ff2d00, #ff2e00, #ff3a00, #ff4400, #fe4c00, #fe5400);
+    width: 300px;
+    height: 200px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px 0px red;
+
+    display: flex;
+    flex-direction: column;
+    z-index: 9999;
+
+    transition: bottom ease-in-out 700ms, transform ease-in-out 175ms;
+}
+
+.main-error-background:hover {
+    transform: scale(1.02);
+}
+
+.error-announcement{
+    margin: 5% 0px 0px 0px;
+
+    font-family: "Lato", sans-serif;
+    font-size: 20px;
+    color: rgb(246, 246, 246);
+
+    align-self: center;
+}
+
+.error-details {
+    position: relative;
+    top: 1%;
+
+    font-family: "Lato", sans-serif;
+    font-size: 15px;
+    color: rgb(246, 246, 246);
+
+    height: 48.5%;
+    width: 92.5%;
+
+    align-self: center;
+}
+
+.error-dismiss {
+    position: absolute;
+    bottom: 0%;
+
+    width: 100%;
+    border: none;
+    border-radius: 0px 0px 10px 10px;
+    background: rgb(232, 232, 232);
+    height: 20%;
+    cursor: pointer;
+
+    border: 0px solid red;
+    font-family: "Lato", sans-serif;
+    font-size: 15px;
+    color: black;
+}
+
+.error-dismiss:hover {
+    background: white;
+}
+
+.error-dismiss:active{
+    background: rgb(240, 240, 240);
+}

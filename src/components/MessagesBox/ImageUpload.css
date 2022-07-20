@@ -1,0 +1,129 @@
+.main_user_image{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 325px;
+    bottom: 0;
+    z-index: 0;
+
+    background-image: linear-gradient(to left top, #252e37, #252e38, #252e38, #242f39, #242f39, #242f3a, #24303a, #24303b, #24303c, #23313d, #23313e, #23313f);
+    display: flex;
+    justify-content: center;
+    align-content: space-between;
+    border-right: 2px solid rgb(45, 45, 45);
+
+
+    min-width: 200px;
+}
+
+.main_user_image_container {
+    position: relative;
+
+    width: 100%;
+    height: 280px;
+    background: transparent;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+
+}
+
+.user_avatar_container {
+    background: transparent;
+    height: 175px;
+    width: 175px;
+
+    display: flex;
+}
+
+.user_avatar {
+    height: 175px;
+    width: 175px;
+
+    position: relative;
+    /* top: 3%; */
+    border-radius: 5px;
+    z-index: 4;
+}
+
+.user_avatar_input {
+    position: absolute;
+    z-index: 5;
+    cursor:pointer;
+
+    background: transparent;
+    border-radius: 5px;
+    padding: 175px 175px 0px 0px;
+    opacity: 0;
+
+    color: white;
+    font-family: "Lato", sans-serif;
+}
+
+.user_avatar_input:hover {
+    background: rgba(0, 0, 0, 0.15);
+    opacity: 1;
+}
+
+.edit_avatar_icon {
+    position: absolute;
+    width: 25px;
+    right: 0%;
+    bottom: 0%;
+
+    background: rgba(48, 48, 48, 0.75);
+    padding: 6px 6px 6px 6px;
+    border-radius: 5px;
+}
+
+.user_avatar_name {
+    color: rgb(224, 224, 224);
+    font-family: "Lato", sans-serif;
+    font-size: 35px;
+
+    position: relative;
+    margin: 0px;
+    /* top: 24.2%; */
+}
+
+.breaking_line {
+    position: absolute;
+    top: 23.6%;
+    
+    height: 2px;
+    width: 100%;
+    background: rgb(194, 193, 193);
+    z-index: 1;
+}
+
+.user_avatar_info_box {
+    position: absolute;
+    top: 290px;
+    left: 0%;
+    right: 0%;
+    bottom: 0%;
+
+    padding-top: 5px;
+    background: #18191a;
+}
+
+.user_avatar_info {
+    position: absolute;
+    background-image: linear-gradient(to right, #303030, #313131, #323232, #333333, #343434);
+
+    margin: 0px 3px 0px 0px;
+    border-radius: 5px;
+    padding: 6px 12px 7px 12px;
+
+    font-size: 15px;
+    font-family: "Lato", sans-serif;
+    color: rgb(210, 210, 210);
+
+    transition: padding ease-in-out 250ms;
+}
+
+.user_avatar_info:hover {
+    padding: 6px 24px 7px 24px;
+}
