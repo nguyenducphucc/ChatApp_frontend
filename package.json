@@ -8,7 +8,7 @@
     "build": "webpack --mode=production",
     "start": "webpack serve --mode=development",
     "server": "json-server ./src/db.json -p3001 --watch",
-    "push": "git add . && git commit -am initialcommit && git push -u origin main"
+    "push": "git add . && git commit -am initialcommitfront && git push -u origin main"
   },
   "author": "Duc Phu",
   "license": "ISC",
