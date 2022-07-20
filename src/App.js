@@ -8,6 +8,7 @@ import SignupPage from "./components/SignupPage";
 import ErrorCard from "./components/ErrorCard";
 import Test from "./components/Test";
 import { getToken } from "./services/messages";
+import { getGifKey } from "./services/giphy";
 
 const App = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const App = () => {
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("LoggedChatappUser");
+    getGifKey();
 
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
