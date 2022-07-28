@@ -8,7 +8,6 @@
 
     display: flex;
     flex-direction: column;
-
     transition: left ease-in-out 400ms;
 }
 
@@ -83,7 +82,7 @@
     position: relative;
     flex-direction: column;
     width: 100%;
-    background-color: rgba(126, 12, 233, 0.074);
+    background-color: transparent;
 }
 
 .main_user_interact {
@@ -384,11 +383,10 @@
 }
 
 .user_message_image_container {
-    background-image: linear-gradient(to left top, #252e37, #252e38, #252e38, #242f39, #242f39, #242f3a, #24303a, #24303b, #24303c, #23313d, #23313e, #23313f);
-    
     width: 500px;
     margin-bottom: 3px;
-    height: fit-content;
+    height: min-content;
+    background: #282828;
     border-radius: 5px;
 }
 
@@ -407,6 +405,7 @@
     width: 50px;
     height: 50px;
     margin: 1px 0px 0px 30px;
+    cursor: pointer;
 }
 
 .user_message_text {

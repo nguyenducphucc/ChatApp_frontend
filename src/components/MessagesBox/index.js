@@ -10,6 +10,8 @@ import MessageInput from "./MessageInput";
 import MessagesUI from "./MessagesUI";
 import ImageUpload from "./ImageUpload";
 import ImageView from "./ImageView";
+import UserProfile from "./UserProfile";
+import MenuComponents from "./MenuComponents";
 import {
   getScrollStatement,
   setScrollStatement,
@@ -23,7 +25,7 @@ var isTyping = false;
 var messages_style = { left: "0%" };
 var id;
 
-var socket = io.connect("/messages");
+var socket = io.connect();
 socket.emit("online");
 
 const MessagesBox = ({ user, setUser, setErrorMessage }) => {
@@ -37,6 +39,10 @@ const MessagesBox = ({ user, setUser, setErrorMessage }) => {
   const [imageMessageUrls, setImageMessageUrls] = useState([]);
   const [openUserInfo, setOpenUserInfo] = useState(false);
   const [imageToView, setImageToView] = useState(null);
+  const [profileInfo, setProfileInfo] = useState(null);
+  const [choice, setChoice] = useState(null);
+  const [friends, setFriends] = useState({});
+
   const navigate = useNavigate();
 
   socket.on("clientsCount", (data) => {
@@ -63,6 +69,39 @@ const MessagesBox = ({ user, setUser, setErrorMessage }) => {
     }
   });
 
+  socket.on("friendRelationship", (data) => {
+    const newFriends = friends;
+
+    if (data.type === "create") {
+      newFriends[data.requester.id] = {
+        recipient: data.requester,
+        status: data.status,
+        time: data.time,
+      };
+    }
+
+    if (data.type === "update_status") {
+      if (data.time !== undefined) {
+        newFriends[data.requesterId] = {
+          ...newFriends[data.requesterId],
+          status: data.status,
+          time: data.time,
+        };
+      } else {
+        newFriends[data.requesterId] = {
+          ...newFriends[data.requesterId],
+          status: data.status,
+        };
+      }
+    }
+
+    if (data.type === "delete") {
+      delete newFriends[data.requesterId];
+    }
+
+    setFriends({ ...newFriends });
+  });
+
   useEffect(() => {
     if (user) {
       id = user.id;
@@ -73,6 +112,8 @@ const MessagesBox = ({ user, setUser, setErrorMessage }) => {
       getToken(curUser.id);
       id = curUser.id;
     }
+
+    socket.emit("initRoom", id);
 
     getSomeMessages()
       .then((res) => {
@@ -87,6 +128,12 @@ const MessagesBox = ({ user, setUser, setErrorMessage }) => {
     getUser(id)
       .then((res) => {
         setImageUrl(res.imageUrl);
+
+        const relationshipList = {};
+        res.friends.map((friend) => {
+          relationshipList[friend.recipient.id] = friend;
+        });
+        setFriends(relationshipList);
       })
       .catch(() => {
         setErrorMessage("It looks like we can not get user. Login is required");
@@ -99,16 +146,16 @@ const MessagesBox = ({ user, setUser, setErrorMessage }) => {
     if (getScrollStatement() === "instant") {
       setTimeout(() => {
         instantScroll(setCountUnread);
-      }, 800);
+      }, 500);
     } else if (getScrollStatement() === "force") {
       setTimeout(() => {
         forceScroll(setCountUnread);
-      }, 300);
+      }, 200);
     } else {
       setTimeout(() => {
         if (getScrollStatement() === "auto")
           autoScroll(countUnread, setCountUnread);
-      }, 300);
+      }, 200);
     }
   }, [newMessages]);
 
@@ -133,13 +180,32 @@ const MessagesBox = ({ user, setUser, setErrorMessage }) => {
   return (
     <div>
       <ImageView imageToView={imageToView} setImageToView={setImageToView} />
+      <UserProfile
+        socket={socket}
+        user={user}
+        userImageUrl={imageUrl}
+        profileInfo={profileInfo}
+        setProfileInfo={setProfileInfo}
+        friends={friends}
+        setFriends={setFriends}
+      />
       <ImageUpload
         socket={socket}
         user={user}
         imageUrl={imageUrl}
         setImageUrl={setImageUrl}
         setOpenUserInfo={setOpenUserInfo}
+        choice={choice}
+        setChoice={setChoice}
         setErrorMessage={setErrorMessage}
+      />
+      <MenuComponents
+        socket={socket}
+        user={user}
+        choice={choice}
+        setChoice={setChoice}
+        friends={friends}
+        setFriends={setFriends}
       />
       <div style={messages_style} className="messages_container">
         <MessagesUI
@@ -147,6 +213,7 @@ const MessagesBox = ({ user, setUser, setErrorMessage }) => {
           setOldMessages={setOldMessages}
           newMessages={newMessages}
           setImageToView={setImageToView}
+          setProfileInfo={setProfileInfo}
         />
         <TypingStatusCard usersTyping={usersTyping} />
         <MessageInput

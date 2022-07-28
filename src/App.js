@@ -10,6 +10,8 @@ import Test from "./components/Test";
 import { getToken } from "./services/messages";
 import { getGifKey } from "./services/giphy";
 
+getGifKey();
+
 const App = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -17,7 +19,6 @@ const App = () => {
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("LoggedChatappUser");
-    getGifKey();
 
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);

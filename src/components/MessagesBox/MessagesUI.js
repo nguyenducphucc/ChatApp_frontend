@@ -5,7 +5,7 @@ import { getSomeMessages } from "../../services/messages";
 const currentTime = Date.now();
 var alreadyInAction = false;
 
-const showOldMessageCard = (oldMessages, setImageToView) => {
+const showOldMessageCard = (oldMessages, setImageToView, setProfileInfo) => {
   const res = [];
 
   for (var i = 0; i < oldMessages.length; i++) {
@@ -14,6 +14,7 @@ const showOldMessageCard = (oldMessages, setImageToView) => {
         key={oldMessages[i].id}
         message={oldMessages[i]}
         setImageToView={setImageToView}
+        setProfileInfo={setProfileInfo}
         currentTime={currentTime}
         lastMessage={i === oldMessages.length - 1 ? null : oldMessages[i + 1]}
       />
@@ -23,7 +24,12 @@ const showOldMessageCard = (oldMessages, setImageToView) => {
   return res;
 };
 
-const showNewMessageCard = (newMessages, setImageToView, lastOldMessage) => {
+const showNewMessageCard = (
+  newMessages,
+  setImageToView,
+  setProfileInfo,
+  lastOldMessage
+) => {
   const res = [];
 
   for (var i = 0; i < newMessages.length; i++) {
@@ -32,6 +38,7 @@ const showNewMessageCard = (newMessages, setImageToView, lastOldMessage) => {
         key={newMessages[i].id}
         message={newMessages[i]}
         setImageToView={setImageToView}
+        setProfileInfo={setProfileInfo}
         currentTime={currentTime}
         lastMessage={i === 0 ? lastOldMessage : newMessages[i - 1]}
       />
@@ -45,6 +52,7 @@ const MessagesUI = ({
   setOldMessages,
   newMessages,
   setImageToView,
+  setProfileInfo,
 }) => {
   const lastOldMessage = oldMessages.length === 0 ? null : oldMessages[0];
 
@@ -54,7 +62,7 @@ const MessagesUI = ({
         document.getElementById("load_next_button").disabled = true;
       } else {
         const elem = document.getElementById("auto-scroll");
-        elem.scrollTo({ top: elem.scrollTop + 3 });
+        elem.scrollTo({ top: elem.scrollTop + 5 });
         setOldMessages(oldMessages.concat(res));
         setTimeout(() => (alreadyInAction = false));
       }
@@ -67,14 +75,14 @@ const MessagesUI = ({
       id="auto-scroll"
       onScroll={() => {
         const targetedScroll = document.getElementById("auto-scroll").scrollTop;
-        if (targetedScroll <= 10 && !alreadyInAction) {
+        if (targetedScroll <= 250 && !alreadyInAction) {
           alreadyInAction = true;
           document.getElementById("load_next_button").click();
         }
       }}
     >
       <div className="old_message_chatbox">
-        {showOldMessageCard(oldMessages, setImageToView)}
+        {showOldMessageCard(oldMessages, setImageToView, setProfileInfo)}
       </div>
       <button
         id="load_next_button"
@@ -84,7 +92,12 @@ const MessagesUI = ({
         Load next
       </button>
       <div className="new_message_chatbox">
-        {showNewMessageCard(newMessages, setImageToView, lastOldMessage)}
+        {showNewMessageCard(
+          newMessages,
+          setImageToView,
+          setProfileInfo,
+          lastOldMessage
+        )}
       </div>
       <div className="main_chatbox_breaking" />
     </div>

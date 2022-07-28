@@ -28,6 +28,7 @@
     max-width: 50%;
     max-height: 90%;
     object-fit:contain;
+    border-radius: 5px;
 }
 
 .image_view_close {

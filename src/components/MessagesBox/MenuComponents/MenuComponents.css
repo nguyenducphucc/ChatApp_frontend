@@ -1,0 +1,168 @@
+@keyframes appear {
+  from {opacity: 0.5;}
+  to {opacity: 1;}
+}
+
+.menucomponents_main {
+  position: absolute;
+  top: 0%;
+  left: 325px;
+  right: 0%;
+  bottom: 0%;
+  z-index: 10;
+
+  animation: appear 75ms;
+  animation-timing-function: linear;
+  
+  background-color: #18191a;
+}
+
+.menucomponents_closeIcon {
+  position: absolute;
+  /* right: 30px; */
+  left: max(calc(100% - 80px), 650px);
+  top: 20px;
+  cursor: pointer;
+  transform: scale(0.85);
+  opacity: 0.75;
+}
+
+.menucomponents_closeIcon:hover {
+  opacity: 1;
+}
+
+/* Friend */
+.friend_main {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  right: 0%;
+  bottom: 0%;
+
+  border-left: rgb(35, 34, 34) solid 1px;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+.friend_bar {
+  background: transparent;
+  display: flex;
+}
+
+.friend_title {
+  font-family: "Lato", sans-serif;
+  font-size: 35px;
+  color: rgb(246, 246, 246);
+  margin: 20px 10px 20px 30px;
+  width: fit-content;
+}
+
+.friend_button {
+  height: 25px;
+  background: transparent;
+  margin: 34px 0px 0px 25px;
+
+  font-family: "Lato", sans-serif;
+  font-size: 19px;
+  color: rgb(71, 79, 87);
+
+  border-style: none;
+}
+
+.friend_button:hover {
+  color: white;
+  cursor: pointer;
+}
+
+.friend_count {
+  background-image: linear-gradient(to right, #303030, #313131, #323232, #333333, #343434);
+  border-radius: 5px;
+  padding: 6px 12px 7px 12px;
+  width: fit-content;
+  margin: 15px 0px 5px 30px;
+  display: flex;
+  white-space: nowrap;
+
+  font-family: "Lato", sans-serif;
+  font-size: 14px;
+  color: rgb(233, 233, 234);
+}
+
+.friend_card_container {
+  background: transparent;
+  height: calc(100% - 132px);
+  overflow: scroll;
+}
+
+.friend_card {
+  background: transparent;
+  margin-left: 15px;
+  padding: 6px 0px;
+  width: calc(100% - 35px);
+  min-width: 694px;
+  display: flex;
+
+  border-top: transparent 1px solid;
+  border-bottom: transparent 1px solid;
+  cursor: pointer;
+}
+
+.friend_card:hover {
+  background: #202020;
+  border-radius: 5px;
+}
+
+.friend_avatar {
+  width: 50px;
+  height: 50px;
+
+  border-radius: 5px;
+  margin: 0px 0px 2px 15px;
+}
+
+.friend_name {
+  font-family: "Lato", sans-serif;
+  font-size: 16px;
+  color: rgb(225, 225, 227);
+  margin: 5px 0px 0px 15px;
+}
+
+.friend_status {
+  font-family: "Lato", sans-serif;
+  font-size: 15px;
+  color: rgb(94, 94, 94);
+  margin: 5px 0px 0px 15px;
+}
+
+.friend_iconContainer {
+  position: absolute;
+  left: max(calc(100% - 148px), 582px); /* For two buttons */
+  margin: 0px auto;
+  background: transparent;
+  margin: 0px;
+  padding: 3px 0px;
+  display: flex;
+}
+
+.friend_imageIcon {
+  background: #303030;
+  padding: 9px 10px;
+  margin-left: 10px;
+  height: 26px;
+  width: 24px;
+  opacity: 0.75;
+  border: 1px solid rgb(38, 38, 38);
+
+  border-radius: 21px;
+}
+
+.friend_card:hover .friend_imageIcon {
+  background: #191919;
+  border: 1px solid rgb(58, 57, 57);
+}
+
+.friend_card:hover .friend_imageIcon:hover {
+  background: rgb(53, 53, 53);
+  opacity: 1;
+}

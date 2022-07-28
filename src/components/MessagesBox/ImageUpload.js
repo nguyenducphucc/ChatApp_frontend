@@ -14,6 +14,8 @@ const ImageUpload = ({
   setImageUrl,
   setOpenUserInfo,
   setErrorMessage,
+  choice,
+  setChoice,
 }) => {
   const handleImageChange = async (e) => {
     const type = e.target.files[0].type;
@@ -68,6 +70,8 @@ const ImageUpload = ({
         socket={socket}
         setOpenUserInfo={setOpenUserInfo}
         setErrorMessage={setErrorMessage}
+        choice={choice}
+        setChoice={setChoice}
       />
     </div>
   );

@@ -5,7 +5,14 @@ import { getGif } from "../../services/giphy";
 var messageTime = "";
 var isSkip = false;
 
-const MessageCard = ({ message, setImageToView, currentTime, lastMessage }) => {
+const MessageCard = ({
+  message,
+  setImageToView,
+  setProfileInfo,
+  currentTime,
+  lastMessage,
+}) => {
+  const userId = message.user.id;
   const name = message.user.name;
   const role = message.user.role;
   const imageUrl = message.user.imageUrl;
@@ -65,6 +72,10 @@ const MessageCard = ({ message, setImageToView, currentTime, lastMessage }) => {
         }
       : {};
 
+  const handleLookProfile = () => {
+    setProfileInfo({ userId, name, imageUrl });
+  };
+
   if (isSkip) {
     return (
       <div style={{ margin: "0px 0px 0px 85px", width: "80%" }}>
@@ -111,10 +122,21 @@ const MessageCard = ({ message, setImageToView, currentTime, lastMessage }) => {
 
   return (
     <div className="main_user_message">
-      <img className="user_message_avatar" src={imageUrl} alt="my_avatar" />
+      <img
+        className="user_message_avatar"
+        src={imageUrl}
+        alt="my_avatar"
+        onClick={handleLookProfile}
+      />
       <div className="user_message_text">
         <div className="user_message">
-          <p className="user_message_info">{name}</p>
+          <p
+            style={{ cursor: "pointer" }}
+            className="user_message_info"
+            onClick={handleLookProfile}
+          >
+            {name}
+          </p>
           <p className="user_message_info">{messageTime}</p>
           {role ? (
             <p style={uniqueDeveloperStyle} className="user_message_info">

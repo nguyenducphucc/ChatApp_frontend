@@ -1,0 +1,211 @@
+.profile_user_container {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  right: 0%;
+  bottom: 0%;
+
+  background: rgba(18, 17, 17, 0.769);
+  width: 100%;
+  height: 100%;
+
+  z-index: 5;
+  display: flex;
+}
+
+@keyframes appear {
+  from {transform: scale(0.6);}
+  to {transform: scale(1);}
+}
+
+.profile_user_main {
+  position: relative;
+  bottom: 60px;
+  align-self: center;
+  margin: 0px auto 0px auto;
+
+  width: 650px;
+  height: min-content;
+  background: rgb(29, 29, 31);
+  /* background: rgb(67, 70, 71); */
+  border-radius: 5px;
+  border: 1px solid rgb(79, 77, 77);
+
+  display: flex;
+  flex-wrap: wrap;
+
+  animation-name: appear;
+  animation-duration: 0.25s;
+}
+
+.profile_user_avatar {
+  position: relative;
+  top: -30px;
+  left: 30px;
+
+  width: 160px;
+  height: 160px;
+  border-radius: 5px;
+}
+
+.profile_user_name {
+  position: relative;
+  top: 25px;
+  left: 70px;
+
+  margin: 0px;
+  height: 50px;
+
+  font-family: "Lato", sans-serif;
+  font-size: 32px;
+  color: white;
+}
+
+.profile_user_addfriend {
+  position: absolute;
+  top: 94px;
+  right: 35px;
+
+  border-style: none;
+  height: 35px;
+  width: 120px;
+
+  font-family: "Lato", sans-serif;
+  font-size: 17px;
+  color: white;
+  cursor: pointer;
+  
+  background: rgb(40, 88, 232);
+  border-radius: 3px;
+}
+
+.profile_user_addfriend:hover {
+  background: rgb(40, 82, 206);
+}
+
+.profile_user_loadingbutton {
+  position: absolute;
+  top: 94px;
+  right: 35px;
+
+  border-style: none;
+  height: 35px;
+  width: 120px;
+
+  font-family: "Lato", sans-serif;
+  font-size: 17px;
+  color: white;
+  cursor: pointer;
+  
+  background: rgb(74, 74, 74);
+  border-radius: 3px;
+}
+
+.profile_user_acceptfriend {
+  position: absolute;
+  top: 94px;
+  right: 160px;
+
+  border-style: none;
+  height: 35px;
+  width: 120px;
+
+  font-family: "Lato", sans-serif;
+  font-size: 17px;
+  color: white;
+  cursor: pointer;
+  
+  background: rgb(40, 88, 232);
+  border-radius: 3px;
+}
+
+.profile_user_acceptfriend:hover {
+  background: rgb(40, 82, 206);
+}
+
+.profile_user_declinefriend {
+  position: absolute;
+  top: 95px;
+  right: 35px;
+
+  border-style: none;
+  height: 35px;
+  width: 120px;
+
+  font-family: "Lato", sans-serif;
+  font-size: 17px;
+  color: white;
+  cursor: pointer;
+  
+  background: rgb(74, 74, 74);
+  border-radius: 3px;
+}
+
+.profile_user_declinefriend:hover {
+  background: rgb(65, 64, 64);
+}
+
+.profile_user_myfriend {
+  position: absolute;
+  top: 94px;
+  right: 35px;
+
+  border-style: none;
+  height: 35px;
+  width: 120px;
+
+  font-family: "Lato", sans-serif;
+  font-size: 17px;
+  color: white;
+  cursor: pointer;
+  
+  background: rgb(74, 74, 74);
+  border-radius: 3px;
+}
+
+.profile_user_cancelfriend {
+  position: absolute;
+  top: 94px;
+  right: 35px;
+
+  border-style: none;
+  height: 35px;
+  width: 120px;
+
+  font-family: "Lato", sans-serif;
+  font-size: 17px;
+  color: white;
+  cursor: pointer;
+  
+  background: rgb(18, 175, 47);
+  border-radius: 3px;
+}
+
+.profile_user_cancelfriend:hover {
+  background: rgb(15, 149, 40);
+}
+
+.profile_user_aboutme_container {
+  position: relative;
+  top: 0px;
+
+  /* background: rgba(50, 112, 227, 0.118); */
+  width: 900px;
+  height: fit-content;
+}
+
+.profile_user_aboutme_title {
+  margin: 0px 0px 0px 35px;
+
+  font-family: "Lato", sans-serif;
+  font-size: 19px;
+  color: white;
+}
+
+.profile_user_aboutme_content {
+  margin: 12px 35px 30px 35px;
+
+  font-family: "Lato", sans-serif;
+  font-size: 16px;
+  color: rgb(240, 238, 238);
+}

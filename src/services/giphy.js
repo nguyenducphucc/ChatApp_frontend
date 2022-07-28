@@ -7,6 +7,7 @@ export const getGifKey = async () => {
 };
 
 export const getGif = async (gifId) => {
+  if(apiKey === undefined) return;
   const res = await axios.get(
     `https://api.giphy.com/v1/gifs/${gifId}?api_key=${apiKey}`
   );
