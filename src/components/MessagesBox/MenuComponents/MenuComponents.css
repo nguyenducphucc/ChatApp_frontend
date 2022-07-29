@@ -92,7 +92,8 @@
 .friend_card_container {
   background: transparent;
   height: calc(100% - 132px);
-  overflow-y: scroll;
+  overflow: scroll;
+  overflow-x: hidden;
 }
 
 .friend_card_container::-webkit-scrollbar {
