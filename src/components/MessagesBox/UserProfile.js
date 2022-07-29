@@ -223,11 +223,7 @@ const UserProfile = ({
         {showGreenButton()}
         <div className="profile_user_aboutme_container">
           <p className="profile_user_aboutme_title">About me</p>
-          <p className="profile_user_aboutme_content">
-            testing testing testing testing testing testing testing testing
-            testing testing testing testing testing testing testing testing
-            testing testing
-          </p>
+          <p className="profile_user_aboutme_content">Nothing to show</p>
         </div>
       </div>
     </div>
