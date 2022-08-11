@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   createFriendRelationship,
@@ -11,16 +11,58 @@ import RemoveIcon from "../../../images/remove.png";
 import DeleteIcon from "../../../images/delete.png";
 import MessageIcon from "../../../images/message.png";
 
-const FriendCard = ({ socket, user, friend, friends, setFriends }) => {
+const FriendCard = ({
+  socket,
+  user,
+  friend,
+  friends,
+  setFriends,
+  onlineFriends,
+}) => {
   const userId = friend.recipient.id;
   const name = friend.recipient.name;
   const imageUrl = friend.recipient.imageUrl;
+  const lastOnline = friend.recipient.lastOnline
+    ? friend.recipient.lastOnline
+    : null;
   const status = friend.status;
 
-  var smallDetail = "";
-  if (status === 3) smallDetail = "Friend";
-  else if (status === 1) smallDetail = "Waiting For Response";
-  else if (status === 2) smallDetail = "New Friend Request";
+  const intoTime = (time) => {
+    var curTime = parseInt(time / 1000);
+
+    if (curTime < 60) return "Just active";
+    if (curTime < 3600) return `Active ${parseInt(curTime / 60)}m ago`;
+    if (curTime < 86400) return `Active ${parseInt(curTime / 3600)}h ago`;
+    if (curTime < 2592000) return `Active ${parseInt(curTime / 86400)}d ago`;
+    return "Offline";
+  };
+  const [smallDetail, setSmallDetail] = useState(
+    status === 3 && lastOnline !== undefined
+      ? intoTime(new Date() - lastOnline)
+      : "Updating..."
+  );
+
+  const [intervalId, setIntervalId] = useState(null);
+  useEffect(() => {
+    if (status === 3) {
+      if (onlineFriends[userId] !== undefined) {
+        clearInterval(intervalId);
+        setIntervalId(null);
+        setSmallDetail("Online");
+      } else if (lastOnline) {
+        if (intervalId === null) {
+          let interval = setInterval(() => {
+            var time = new Date() - lastOnline;
+            setSmallDetail(intoTime(time));
+          }, 60000);
+          setIntervalId(interval);
+        }
+      } else {
+        setSmallDetail("Friend");
+      }
+    } else if (status === 1) setSmallDetail("Waiting For Response");
+    else if (status === 2) setSmallDetail("New Friend Request");
+  }, [onlineFriends]);
 
   return (
     <div className="friend_card">
@@ -110,6 +152,10 @@ const FriendCard = ({ socket, user, friend, friends, setFriends }) => {
                   time,
                 };
                 socket.emit("friendRelationship", socketUpdateStatusData);
+
+                const onlineFriendId = {};
+                onlineFriendId[userId] = 1;
+                socket.emit("initFriendOnline", onlineFriendId);
 
                 const newFriends = friends;
                 newFriends[userId].status = 3;

@@ -78,15 +78,21 @@ const MessageCard = ({
 
   if (isSkip) {
     return (
-      <div style={{ margin: "0px 0px 0px 85px", width: "80%" }}>
+      <div
+        style={{
+          margin: "0px 0px 0px 85px",
+          width: "80%",
+        }}
+      >
         {content && <p className="user_message_content">{content}</p>}
         {imageMessages &&
           imageMessages.map((imageMessage) => (
             <div
               key={imageMessage.imageName}
               style={{
+                marginBottom: "3px",
                 width: "500px",
-                height: `calc(${imageMessage.height} * 500 / ${imageMessage.width})`,
+                height: `calc(${imageMessage.height}px * 500 / ${imageMessage.width})`,
               }}
               className="user_message_image_container"
             >

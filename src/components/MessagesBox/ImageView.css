@@ -15,7 +15,7 @@
 }
 
 .image_view_container {
-    background-color: rgba(22, 34, 46, 0.98);
+    background-color: #18191af9;
     height: 100%;
     display: flex;
     justify-content: center;

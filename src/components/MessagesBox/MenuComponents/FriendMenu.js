@@ -7,10 +7,17 @@ const FriendMenu = ({
   user,
   friends,
   setFriends,
+  onlineFriends,
   friendList,
   friendFilter,
   setFriendFilter,
 }) => {
+  var title = "";
+  if (friendFilter === "all") title = "Friend";
+  else if (friendFilter === "online") title = "Online";
+  else if (friendFilter === "pending") title = "Pending";
+  else if (friendFilter === "requested") title = "Request";
+
   return (
     <div className="friend_main">
       <div className="friend_bar">
@@ -25,7 +32,7 @@ const FriendMenu = ({
         <button
           style={friendFilter === "online" ? { color: "white" } : {}}
           className="friend_button"
-          onClick={() => setFriendFilter("all")}
+          onClick={() => setFriendFilter("online")}
         >
           Online
         </button>
@@ -52,17 +59,19 @@ const FriendMenu = ({
         </button>
       </div>
       <p className="friend_count">
-        {friendList.length} {friendList.length <= 1 ? "Friend" : "Friends"}
+        {title} {" – "} {friendList.length}
+        {/* {friendList.length > 1 && "s"} */}
       </p>
       <div className="friend_card_container">
-        {friendList.map((friend, index) => (
+        {friendList.map((friend) => (
           <FriendCard
-            key={index}
+            key={friend.id}
             socket={socket}
             user={user}
             friend={friend}
             friends={friends}
             setFriends={setFriends}
+            onlineFriends={onlineFriends}
           />
         ))}
       </div>

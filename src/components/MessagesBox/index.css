@@ -61,7 +61,7 @@
 }
 
 .load_next_button {
-    width: 100%;
+    width: 20px;
     height: 20px;
     display: none;
     
@@ -70,12 +70,48 @@
     z-index: 50;
 }
 
+.opening_chatbox {
+    min-height: 285px;
+
+    background: transparent;
+    border-bottom: 2px solid rgb(59, 58, 58);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.opening_chatbox_avatar {
+    height: 150px;
+    width: 150px;
+    border-radius: 5px;
+    margin: 25px 0px;
+}
+
+.opening_chatbox_title {
+    font-family: "Lato", sans-serif;
+    font-size: 40px;
+
+    margin: 0px 0px;
+    color: rgb(228, 228, 228);;
+}
+
+.padding_message_chatbox {
+    width: 100%;
+    min-height: 90vh;
+    background: transparent;
+
+    transition: ease-in-out 0ms;
+}
+
 .old_message_chatbox {
     position: relative;
     display: flex;
     flex-direction: column-reverse;
 
     width: 100%;
+    height: fit-content;
+    background: transparent;
 }
 
 .new_message_chatbox {
@@ -363,6 +399,7 @@
 
     font-size: 15px;
     font-family: "Lato", sans-serif;
+    white-space: nowrap;
 
     transition: padding ease-in-out 250ms;
 }
@@ -380,12 +417,12 @@
     width: fit-content;
 
     font-family: "Lato", sans-serif;
+    white-space: nowrap;
 }
 
 .user_message_image_container {
     width: 500px;
     margin-bottom: 3px;
-    height: min-content;
     background: #282828;
     border-radius: 5px;
 }
@@ -403,6 +440,7 @@
 .user_message_avatar {
     border-radius: 4px;
     width: 50px;
+    min-width: 50px;
     height: 50px;
     margin: 1px 0px 0px 30px;
     cursor: pointer;
@@ -435,7 +473,7 @@
     font-size: 15.8px;
     font-style: italic;
     font-family: "Lato", sans-serif;
-    color: rgb(189, 188, 188);
+    color: rgb(179, 178, 178);
 
     transition: height ease-in-out 500ms, opacity ease-in 350ms;
 }

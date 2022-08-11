@@ -82,7 +82,11 @@ const TextInput = ({
             setScrollStatement("force");
             setNewMessages(newMessages.concat(res));
             socket.emit("message", res);
-            socket.emit("typing", { type: "stop", name: user.name });
+            socket.emit("typing", {
+              type: "stop",
+              id: user.id,
+              name: user.name,
+            });
           })
           .catch((err) => {
             setErrorMessage(err.response.data.error);

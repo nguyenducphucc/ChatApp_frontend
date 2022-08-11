@@ -11,12 +11,13 @@ const MenuComponents = ({
   setFriends,
   choice,
   setChoice,
+  onlineFriends,
 }) => {
   if (choice === null) return null;
-  const [friendFilter, setFriendFilter] = useState("all");
+  const [friendFilter, setFriendFilter] = useState("online");
 
   var allFriendList = [];
-  // var onlineFriendList = [];
+  var onlineFriendList = [];
   var requestedFriendList = [];
   var pendingFriendList = [];
   // var blockedFriendList = [];
@@ -24,11 +25,18 @@ const MenuComponents = ({
   for (const id in friends) {
     if (friends[id].status === 2) pendingFriendList.push(friends[id]);
     else if (friends[id].status === 1) requestedFriendList.push(friends[id]);
-    else if (friends[id].status === 3) allFriendList.push(friends[id]);
+    else if (friends[id].status === 3) {
+      allFriendList.push(friends[id]);
+
+      if (onlineFriends[friends[id].recipient.id] !== undefined) {
+        onlineFriendList.push(friends[id]);
+      }
+    }
   }
 
   var friendList = [];
   if (friendFilter === "all") friendList = allFriendList;
+  else if (friendFilter === "online") friendList = onlineFriendList;
   else if (friendFilter === "pending") friendList = pendingFriendList;
   else if (friendFilter === "requested") friendList = requestedFriendList;
 
@@ -39,6 +47,7 @@ const MenuComponents = ({
         user={user}
         friends={friends}
         setFriends={setFriends}
+        onlineFriends={onlineFriends}
         friendList={friendList}
         friendFilter={friendFilter}
         setFriendFilter={setFriendFilter}

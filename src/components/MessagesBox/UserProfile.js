@@ -112,6 +112,9 @@ const UserProfile = ({
                   time,
                 };
                 socket.emit("friendRelationship", socketUpdateStatusData);
+                const onlineFriendId = {};
+                onlineFriendId[userId] = 1;
+                socket.emit("initFriendOnline", onlineFriendId);
 
                 const newFriends = friends;
                 newFriends[userId].status = 3;

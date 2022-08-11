@@ -129,7 +129,6 @@
 
   border-top: transparent 1px solid;
   border-bottom: transparent 1px solid;
-  cursor: pointer;
 }
 
 .friend_card:hover {
@@ -177,6 +176,7 @@
   width: 24px;
   opacity: 0.75;
   border: 1px solid rgb(38, 38, 38);
+  cursor: pointer;
 
   border-radius: 21px;
 }

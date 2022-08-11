@@ -15,7 +15,6 @@ const MessageInput = ({
   setImageMessageUrls,
   imageMessageFiles,
   setImageMessageFiles,
-  // onlineCount,
   countUnread,
   handleTyping,
   handleUserToggle,
@@ -198,8 +197,6 @@ const MessageInput = ({
           setErrorMessage={setErrorMessage}
         />
       </div>
-
-      {/* <p className="online_count_text">{onlineCount} online</p> */}
     </div>
   );
 };

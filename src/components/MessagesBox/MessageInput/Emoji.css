@@ -93,6 +93,7 @@ aside.emoji-picker-react {
     width: 100%;
     object-fit:contain;
     max-width: 35px;
+    min-width: 35px;
     cursor: pointer;
     opacity: 0.5;
     transform: scale(0.95);
