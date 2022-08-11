@@ -99,7 +99,7 @@ const MessagesUI = ({
 
     setTimeout(() => {
       clearInterval(forceDownId);
-    }, 400);
+    }, 800);
 
     setTimeout(() => {
       setUIStyle({ transition: "ease-in-out 400ms" });
