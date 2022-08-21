@@ -24,9 +24,7 @@
 
 .image_view_content {
     position: relative;
-    width: 100%;
-    max-width: 50%;
-    max-height: 90%;
+    background: red;
     object-fit:contain;
     border-radius: 5px;
 }

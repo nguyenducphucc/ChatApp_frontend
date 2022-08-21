@@ -21,7 +21,6 @@ import {
 } from "./ScrollFunctions";
 import { getToken } from "../../services/messages";
 
-var isTyping = false;
 var messages_style = { left: "0%" };
 var id = null;
 
@@ -143,16 +142,6 @@ const MessagesBox = ({ user, setUser, setErrorMessage }) => {
     }
 
     document.getElementById("load_next_button").click();
-
-    // getSomeMessages()
-    //   .then((res) => {
-    //     if (res !== null) {
-    //       setOldMessages(res);
-    //     }
-    //   })
-    //   .catch(() =>
-    //     setErrorMessage(">>> It looks like we can't get messages from database")
-    //   );
   }, []);
 
   useEffect(() => {
@@ -190,24 +179,14 @@ const MessagesBox = ({ user, setUser, setErrorMessage }) => {
     } else if (getScrollStatement() === "force") {
       setTimeout(() => {
         forceScroll(setCountUnread);
-      }, 200);
+      }, 40);
     } else {
       setTimeout(() => {
         if (getScrollStatement() === "auto")
           autoScroll(countUnread, setCountUnread);
-      }, 200);
+      }, 40);
     }
   }, [newMessages]);
-
-  const handleTyping = (value) => {
-    if (value !== "" && !isTyping) {
-      isTyping = true;
-      socket.emit("typing", { type: "typing", id: user.id, name: user.name });
-    } else if (value === "" && isTyping) {
-      isTyping = false;
-      socket.emit("typing", { type: "stop", id: user.id, name: user.name });
-    }
-  };
 
   const handleUserToggle = () => {
     if (openUserInfo) {
@@ -266,7 +245,6 @@ const MessagesBox = ({ user, setUser, setErrorMessage }) => {
           imageMessageFiles={imageMessageFiles}
           setImageMessageFiles={setImageMessageFiles}
           countUnread={countUnread}
-          handleTyping={handleTyping}
           handleUserToggle={handleUserToggle}
           newMessages={newMessages}
           setNewMessages={setNewMessages}

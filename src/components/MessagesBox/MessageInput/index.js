@@ -16,7 +16,6 @@ const MessageInput = ({
   imageMessageFiles,
   setImageMessageFiles,
   countUnread,
-  handleTyping,
   handleUserToggle,
   newMessages,
   setNewMessages,
@@ -135,7 +134,6 @@ const MessageInput = ({
         setImageMessageUrls={setImageMessageUrls}
         imageMessageFiles={imageMessageFiles}
         setImageMessageFiles={setImageMessageFiles}
-        handleTyping={handleTyping}
         setErrorMessage={setErrorMessage}
       />
 

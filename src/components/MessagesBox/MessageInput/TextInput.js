@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { storage } from "../../../services/firebase";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { createMessage, verifyToken } from "../../../services/messages";
@@ -11,6 +11,20 @@ import SendIcon from "../../../images/send.png";
 import Emote from "../../../images/emote.png";
 
 var pickerStyle = { display: "none" };
+var isTyping = false;
+
+const shorten = (text) => {
+  var res = "";
+
+  var indexLeft = 0;
+  while (indexLeft < text.length && text[indexLeft] === " ") indexLeft++;
+
+  var indexRight = text.length - 1;
+  while (indexRight >= indexLeft && text[indexRight] === " ") indexRight--;
+
+  for (; indexLeft <= indexRight; indexLeft++) res += text[indexLeft];
+  return res;
+};
 
 const TextInput = ({
   socket,
@@ -24,14 +38,30 @@ const TextInput = ({
   setImageMessageUrls,
   imageMessageFiles,
   setImageMessageFiles,
-  handleTyping,
   setErrorMessage,
 }) => {
   const [emojiToggle, setEmojiToggle] = useState(false);
   const [chosenEmoji, setChosenEmoji] = useState("");
 
+  useEffect(() => {
+    const isValidate = messageToSubmit !== "" || imageMessageUrls.length !== 0;
+    if (isValidate && !isTyping) {
+      isTyping = true;
+      socket.emit("typing", { type: "typing", id: user.id, name: user.name });
+    } else if (!isValidate && isTyping) {
+      isTyping = false;
+      socket.emit("typing", { type: "stop", id: user.id, name: user.name });
+    }
+  }, [messageToSubmit, imageMessageUrls]);
+
+  const shortenMessageToSubmit = shorten(messageToSubmit);
+  const submitButton = document.getElementById("user_submit_message");
+  if (submitButton)
+    submitButton.disabled =
+      shortenMessageToSubmit === "" && imageMessageUrls.length === 0;
+
   var submitButtonStyle = { opacity: "0%" };
-  if (messageToSubmit !== "" || imageMessageUrls.length !== 0) {
+  if (shortenMessageToSubmit !== "" || imageMessageUrls.length !== 0) {
     submitButtonStyle = { opacity: "60%", zIndex: "2" };
   } else {
     submitButtonStyle = { opacity: "0%", zIndex: "0" };
@@ -71,7 +101,7 @@ const TextInput = ({
         }
 
         const newMessage = {
-          content: messageToSubmit,
+          content: shortenMessageToSubmit,
           time: Date.now(),
           imageMessages,
           userId: res.id,
@@ -150,22 +180,23 @@ const TextInput = ({
 
   return (
     <>
-      <form className="user_input_message_container" onSubmit={handleSubmit}>
+      <form
+        id="user_input_message_container"
+        className="user_input_message_container"
+        onSubmit={handleSubmit}
+      >
         <input
           id="user_input_message"
           className="user_input_message"
           value={messageToSubmit}
           placeholder={inputPlaceholder}
           autoComplete="off"
-          onChange={({ target }) => {
-            setMessageToSubmit(target.value);
-            handleTyping(target.value);
-          }}
+          onChange={({ target }) => setMessageToSubmit(target.value)}
         />
 
         <button
           style={submitButtonStyle}
-          disabled={messageToSubmit === "" && imageMessageUrls === 0}
+          id="user_submit_message"
           className="user_submit_message"
           type="submit"
         >

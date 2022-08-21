@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import "./Giphy.css";
@@ -26,25 +26,23 @@ const Giphy = ({ socket, newMessages, setNewMessages, setErrorMessage }) => {
     mainStyle = { minHeight: "40px" };
   }
 
-  if (toggleOpen) {
-    window.addEventListener("mouseup", function (e) {
-      var giphyContainer = document.getElementById("gifContainer");
-      var giphyIcon = document.getElementById("gif_icon");
+  useEffect(() => {
+    var giphyContainer = document.getElementById("gifContainer");
+    var giphyInput = document.getElementById("gif_input");
+    var giphyIcon = document.getElementById("gif_icon");
 
+    window.addEventListener("mouseup", (e) => {
       if (!giphyContainer.contains(e.target) && e.target !== giphyIcon) {
         setToggleOpen(false);
       }
     });
-  } else {
-    window.addEventListener("mouseup", function (e) {
-      var giphyInput = document.getElementById("gif_input");
-      var giphyIcon = document.getElementById("gif_icon");
 
+    window.addEventListener("mouseup", function (e) {
       if (e.target === giphyIcon) {
-        setTimeout(() => giphyInput.focus());
+        setTimeout(() => giphyInput.focus(), 100);
       }
     });
-  }
+  }, []);
 
   const handleChange = ({ target }) => {
     setSearch(target.value);

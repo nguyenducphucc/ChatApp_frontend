@@ -22,10 +22,9 @@ export const autoScroll = (countUnread, setCountUnread) => {
 };
 
 export const forceScroll = (setCountUnread) => {
-  const elem = document.getElementById("auto-scroll");
-  elem.scrollTo({ top: elem.scrollHeight, behavior: "smooth" });
+  document.getElementById("jump_chatbox").click();
   setCountUnread(0);
-  lastHeight = elem.scrollHeight;
+  lastHeight = document.getElementById("auto-scroll").scrollHeight;
 };
 
 export const instantScroll = (setCountUnread) => {
