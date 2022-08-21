@@ -121,8 +121,8 @@ const MessagesUI = ({
     });
 
     setTimeout(() => {
-      setUIStyle({ transition: "ease-in-out 1500ms" });
-    }, 500);
+      setUIStyle({ transition: "ease-in-out 400ms" });
+    }, 800);
   }, []);
 
   useEffect(() => {
