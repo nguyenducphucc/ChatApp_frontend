@@ -14,6 +14,7 @@ const UserProfile = ({
   setProfileInfo,
   friends,
   setFriends,
+  friendsState,
 }) => {
   if (profileInfo === null) return null;
 
@@ -73,6 +74,7 @@ const UserProfile = ({
               const newFriends = friends;
               delete newFriends[userId];
               setFriends({ ...newFriends });
+              delete friendsState[userId];
               setLoading(false);
             });
           }}
@@ -120,6 +122,8 @@ const UserProfile = ({
                 newFriends[userId].status = 3;
                 newFriends[userId].time = time;
                 setFriends({ ...newFriends });
+                friendsState[userId].status = 3;
+                friendsState[userId].time = time;
 
                 setLoading(false);
               });
@@ -156,6 +160,7 @@ const UserProfile = ({
                 const newFriends = friends;
                 delete newFriends[userId];
                 setFriends({ ...newFriends });
+                delete friendsState[userId];
                 setLoading(false);
               });
             }}
@@ -204,6 +209,7 @@ const UserProfile = ({
             const newFriends = friends;
             newFriends[userId] = res;
             setFriends({ ...newFriends });
+            friendsState[userId] = res;
 
             setLoading(false);
           });

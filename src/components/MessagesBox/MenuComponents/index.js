@@ -9,9 +9,16 @@ const MenuComponents = ({
   user,
   friends,
   setFriends,
+  friendsState,
   choice,
   setChoice,
   onlineFriends,
+  activeConvoFriendId,
+  setActiveConvoFriendId,
+  convoIdContainer,
+  convoOldMessages,
+  convoNewMessages,
+  convoLastRead,
 }) => {
   if (choice === null) return null;
   const [friendFilter, setFriendFilter] = useState("online");
@@ -47,12 +54,20 @@ const MenuComponents = ({
         user={user}
         friends={friends}
         setFriends={setFriends}
+        friendsState={friendsState}
         onlineFriends={onlineFriends}
         friendList={friendList}
         friendFilter={friendFilter}
         setFriendFilter={setFriendFilter}
+        activeConvoFriendId={activeConvoFriendId}
+        setActiveConvoFriendId={setActiveConvoFriendId}
+        convoIdContainer={convoIdContainer}
+        convoOldMessages={convoOldMessages}
+        convoNewMessages={convoNewMessages}
+        convoLastRead={convoLastRead}
       />
       <img
+        id="menucomponents_closeIcon"
         className="menucomponents_closeIcon"
         src={CloseIcon}
         onClick={() => setChoice(null)}

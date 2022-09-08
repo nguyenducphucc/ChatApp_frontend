@@ -2,19 +2,33 @@ import React from "react";
 
 var typingStatement;
 var typingStyle;
-const TypingStatusCard = ({ usersTyping }) => {
-  if (usersTyping.length !== 0) {
-    typingStatement = usersTyping[0].name;
+const TypingStatusCard = ({
+  usersTyping,
+  convoIdContainer,
+  activeConvoFriendId,
+}) => {
+  const convoId = convoIdContainer[activeConvoFriendId].convoId;
+  var lastPos = usersTyping.length - 1;
+  var first = false;
+  var length = 0;
 
-    for (var i = 1; i < usersTyping.length; i++) {
+  while (lastPos >= 0 && usersTyping[lastPos].convoId !== convoId) lastPos -= 1;
+  for (var i = 0; i <= lastPos; i++) {
+    if (!first && usersTyping[i].convoId === convoId) {
+      first = true;
+      length += 1;
+      typingStatement = usersTyping[i].name;
+    } else if (first && usersTyping[i].convoId === convoId) {
+      length += 1;
       typingStatement +=
-        i === usersTyping.length - 1
+        i === lastPos
           ? ` and ${usersTyping[i].name}`
           : `, ${usersTyping[i].name}`;
     }
+  }
 
-    typingStatement +=
-      usersTyping.length === 1 ? " is typing..." : " are typing...";
+  if (length) {
+    typingStatement += length === 1 ? " is typing..." : " are typing...";
     typingStyle = { height: "20px", opacity: "1" };
   } else {
     typingStatement = "Done";

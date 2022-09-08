@@ -7,14 +7,9 @@ export const getToken = (key) => {
   token = `bearer ${key}`;
 };
 
-let firstMessageId = null;
-export const getSomeMessages = async () => {
-  const res =
-    firstMessageId === null
-      ? await axios.get(baseUrl)
-      : await axios.get(`${baseUrl}/${firstMessageId}`);
+export const getSomeMessages = async ({ activeConvoId, targetMessageId }) => {
+  const res = await axios.get(`${baseUrl}/${activeConvoId}/${targetMessageId}`);
   if (res.data.length === 0) return null;
-  firstMessageId = res.data[res.data.length - 1].id;
   return res.data;
 };
 

@@ -7,10 +7,17 @@ const FriendMenu = ({
   user,
   friends,
   setFriends,
+  friendsState,
   onlineFriends,
   friendList,
   friendFilter,
   setFriendFilter,
+  activeConvoFriendId,
+  setActiveConvoFriendId,
+  convoIdContainer,
+  convoOldMessages,
+  convoNewMessages,
+  convoLastRead,
 }) => {
   var title = "";
   if (friendFilter === "all") title = "Friend";
@@ -71,7 +78,14 @@ const FriendMenu = ({
             friend={friend}
             friends={friends}
             setFriends={setFriends}
+            friendsState={friendsState}
             onlineFriends={onlineFriends}
+            activeConvoFriendId={activeConvoFriendId}
+            setActiveConvoFriendId={setActiveConvoFriendId}
+            convoIdContainer={convoIdContainer}
+            convoOldMessages={convoOldMessages}
+            convoNewMessages={convoNewMessages}
+            convoLastRead={convoLastRead}
           />
         ))}
       </div>

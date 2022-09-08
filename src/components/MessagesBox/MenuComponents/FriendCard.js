@@ -5,6 +5,8 @@ import {
   cancelFriendRequest,
 } from "../../../services/friends";
 
+import { createConvo } from "../../../services/convo";
+
 import CloseIcon from "../../../images/close.png";
 import AcceptIcon from "../../../images/accept.png";
 import RemoveIcon from "../../../images/remove.png";
@@ -17,14 +19,19 @@ const FriendCard = ({
   friend,
   friends,
   setFriends,
+  friendsState,
   onlineFriends,
+  // activeConvoFriendId,
+  setActiveConvoFriendId,
+  convoIdContainer,
+  convoOldMessages,
+  convoNewMessages,
+  convoLastRead,
 }) => {
   const userId = friend.recipient.id;
   const name = friend.recipient.name;
   const imageUrl = friend.recipient.imageUrl;
-  const lastOnline = friend.recipient.lastOnline
-    ? friend.recipient.lastOnline
-    : null;
+  const lastOnline = friend.recipient.lastOnline || null;
   const status = friend.status;
 
   const intoTime = (time) => {
@@ -36,6 +43,48 @@ const FriendCard = ({
     if (curTime < 2592000) return `Active ${parseInt(curTime / 86400)}d ago`;
     return "Offline";
   };
+
+  const openConvo = () => {
+    if (convoIdContainer[userId] === undefined) {
+      const data = {
+        myId: user.id,
+        friendId: userId,
+      };
+
+      createConvo(data).then((res) => {
+        convoIdContainer[userId] = {
+          convoId: res._id,
+          name: res.friend.name,
+          imageUrl: res.friend.imageUrl,
+        };
+
+        convoOldMessages[res._id] = [];
+        convoNewMessages[res._id] = [];
+        convoLastRead[res._id] = "";
+
+        socket.emit("newConvoNotify", {
+          requesterId: res.me.id,
+          requesterName: res.me.name,
+          requesterImageUrl: res.me.imageUrl,
+          recipientId: userId,
+          convoId: res._id,
+        });
+
+        setActiveConvoFriendId(userId);
+        setTimeout(
+          () => document.getElementById("menucomponents_closeIcon").click(),
+          100
+        );
+      });
+    } else {
+      setActiveConvoFriendId(userId);
+      setTimeout(
+        () => document.getElementById("menucomponents_closeIcon").click(),
+        100
+      );
+    }
+  };
+
   const [smallDetail, setSmallDetail] = useState(
     status === 3 && lastOnline !== undefined
       ? intoTime(new Date() - lastOnline)
@@ -64,20 +113,27 @@ const FriendCard = ({
     else if (status === 2) setSmallDetail("New Friend Request");
   }, [onlineFriends]);
 
+  const onClickHandler = (e) => {
+    if (e.target.className !== "friend_imageIcon") {
+      openConvo();
+    }
+  };
+
   return (
-    <div className="friend_card">
+    <div id="friend_card" className="friend_card" onClick={onClickHandler}>
       <img className="friend_avatar" src={imageUrl} alt="friend_card" />
       <div>
         <p className="friend_name">{name}</p>
         <p className="friend_status">{smallDetail}</p>
       </div>
       {status === 3 && (
-        <div className="friend_iconContainer">
+        <div id="friend_iconContainer" className="friend_iconContainer">
           <img
             style={{ padding: "10px 10px 8px" }}
             className="friend_imageIcon"
             src={MessageIcon}
             alt="message_icon"
+            onClick={openConvo}
           />
           <img
             className="friend_imageIcon"
@@ -100,6 +156,7 @@ const FriendCard = ({
               const loadingFriends = friends;
               loadingFriends[userId].status = -1;
               setFriends({ ...loadingFriends });
+              friendsState[userId].status = -1;
 
               cancelFriendRequest(requestRelationship).then(() => {
                 const socketDeleteData = {
@@ -112,13 +169,14 @@ const FriendCard = ({
                 const newFriends = friends;
                 delete newFriends[userId];
                 setFriends({ ...newFriends });
+                delete friendsState[userId];
               });
             }}
           />
         </div>
       )}
       {status === 2 && (
-        <div className="friend_iconContainer">
+        <div id="friend_iconContainer" className="friend_iconContainer">
           <img
             className="friend_imageIcon"
             src={AcceptIcon}
@@ -142,6 +200,7 @@ const FriendCard = ({
               const loadingFriends = friends;
               loadingFriends[userId].status = -1;
               setFriends({ ...loadingFriends });
+              // friendsState[userId].status = -1;
 
               createFriendRelationship(requestRelationship).then(() => {
                 const socketUpdateStatusData = {
@@ -161,6 +220,8 @@ const FriendCard = ({
                 newFriends[userId].status = 3;
                 newFriends[userId].time = time;
                 setFriends({ ...newFriends });
+                // friendsState[userId].status = 3;
+                // friendsState[userId].time = time;
               });
             }}
           />
@@ -185,6 +246,7 @@ const FriendCard = ({
               const loadingFriends = friends;
               loadingFriends[userId].status = -1;
               setFriends({ ...loadingFriends });
+              friendsState[userId].status = -1;
 
               cancelFriendRequest(requestRelationship).then(() => {
                 const socketDeleteData = {
@@ -197,6 +259,7 @@ const FriendCard = ({
                 const newFriends = friends;
                 delete newFriends[userId];
                 setFriends({ ...newFriends });
+                delete friendsState[userId];
               });
             }}
           />
@@ -205,6 +268,7 @@ const FriendCard = ({
       {status === 1 && (
         <div
           style={{ left: "max(calc(100% - 94px), 638px)" }}
+          id="friend_iconContainer"
           className="friend_iconContainer"
         >
           <img
@@ -228,6 +292,7 @@ const FriendCard = ({
               const loadingFriends = friends;
               loadingFriends[userId].status = -1;
               setFriends({ ...loadingFriends });
+              friendsState[userId].status = -1;
 
               cancelFriendRequest(requestRelationship).then(() => {
                 const socketDeleteData = {
@@ -240,6 +305,7 @@ const FriendCard = ({
                 const newFriends = friends;
                 delete newFriends[userId];
                 setFriends({ ...newFriends });
+                delete friendsState[userId];
               });
             }}
           />

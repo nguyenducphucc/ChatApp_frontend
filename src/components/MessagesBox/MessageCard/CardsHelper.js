@@ -27,7 +27,9 @@ export const InfoCard = ({
       >
         {name}
       </p>
-      <p className="user_message_info">{messageTime}</p>
+      <p style={{ color: "rgb(120, 120, 120)" }} className="user_message_info">
+        {messageTime}
+      </p>
       {role ? (
         <p style={uniqueDeveloperStyle} className="user_message_info">
           {role}

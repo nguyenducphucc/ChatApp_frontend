@@ -8,10 +8,15 @@ export const setScrollStatement = (statement) => {
 
 export const autoScroll = (countUnread, setCountUnread) => {
   const elem = document.getElementById("auto-scroll");
+  console.log(elem.scrollTop);
+  console.log(elem.scrollTop + elem.clientHeight + 3);
+  console.log(lastHeight);
 
-  if (elem.scrollTop + elem.clientHeight + 1 >= lastHeight) {
+  if (
+    elem.scrollTop === 0 ||
+    elem.scrollTop + elem.clientHeight + 3 >= lastHeight
+  ) {
     elem.scrollTo({ top: elem.scrollHeight, behavior: "smooth" });
-    setCountUnread(0);
   } else {
     setCountUnread(countUnread + 1);
   }

@@ -12,6 +12,8 @@ import Emote from "../../../images/emote.png";
 
 var pickerStyle = { display: "none" };
 var isTyping = false;
+var lastConvoId = "none";
+var thisConvoId = "none";
 
 const shorten = (text) => {
   var res = "";
@@ -39,18 +41,52 @@ const TextInput = ({
   imageMessageFiles,
   setImageMessageFiles,
   setErrorMessage,
+  convoIdContainer,
+  activeConvoFriendId,
+  convoNewMessages,
+  convoLastRead,
+  setLastReadNotify,
+  setIsSocketUpdate,
 }) => {
   const [emojiToggle, setEmojiToggle] = useState(false);
   const [chosenEmoji, setChosenEmoji] = useState("");
 
   useEffect(() => {
-    const isValidate = messageToSubmit !== "" || imageMessageUrls.length !== 0;
+    lastConvoId = thisConvoId;
+    thisConvoId = convoIdContainer[activeConvoFriendId].convoId;
+
+    if (user) {
+      isTyping = false;
+      setMessageToSubmit("");
+      imageMessageUrls.forEach((url) => URL.revokeObjectURL(url));
+      setImageMessageUrls([]);
+      setImageMessageFiles([]);
+      socket.emit("typing", {
+        type: "stop",
+        id: user.id,
+        convoId: lastConvoId,
+      });
+    }
+  }, [activeConvoFriendId]);
+
+  useEffect(() => {
+    const isValidate =
+      shorten(messageToSubmit) !== "" || imageMessageUrls.length !== 0;
     if (isValidate && !isTyping) {
       isTyping = true;
-      socket.emit("typing", { type: "typing", id: user.id, name: user.name });
+      socket.emit("typing", {
+        type: "typing",
+        id: user.id,
+        name: user.name,
+        convoId: convoIdContainer[activeConvoFriendId].convoId,
+      });
     } else if (!isValidate && isTyping) {
       isTyping = false;
-      socket.emit("typing", { type: "stop", id: user.id, name: user.name });
+      socket.emit("typing", {
+        type: "stop",
+        id: user.id,
+        convoId: convoIdContainer[activeConvoFriendId].convoId,
+      });
     }
   }, [messageToSubmit, imageMessageUrls]);
 
@@ -78,6 +114,7 @@ const TextInput = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const convoId = convoIdContainer[activeConvoFriendId].convoId;
 
     verifyToken()
       .then(async (res) => {
@@ -105,20 +142,32 @@ const TextInput = ({
           time: Date.now(),
           imageMessages,
           userId: res.id,
+          convoId,
         };
 
         createMessage(newMessage)
           .then((res) => {
+            console.log("res", res);
+            res.id = res._id;
+            delete res._id;
+            delete res.__v;
+
+            convoLastRead[convoId] = res.id;
+            setLastReadNotify({ ...convoLastRead });
+            setIsSocketUpdate("update");
+
             setScrollStatement("force");
             setNewMessages(newMessages.concat(res));
+            convoNewMessages[convoId].push(res); // after setNewMessages to avoid double message
             socket.emit("message", res);
             socket.emit("typing", {
               type: "stop",
               id: user.id,
-              name: user.name,
+              convoId,
             });
           })
           .catch((err) => {
+            console.log(err);
             setErrorMessage(err.response.data.error);
           });
       })

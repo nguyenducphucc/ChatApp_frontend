@@ -19,6 +19,7 @@ const MessageCard = ({
   setProfileInfo,
   currentTime,
   lastMessage,
+  isLastRead,
 }) => {
   const userId = message.user.id;
   const name = message.user.name;
@@ -62,58 +63,64 @@ const MessageCard = ({
 
   if (isSkip) {
     return (
-      <div className="main_user_message_skipped">
-        {content && <TextCard content={content} />}
-        {imageMessages && (
-          <ImagesHelper
-            imageMessages={imageMessages}
-            setImageToView={setImageToView}
-          />
-        )}
-        {gifMessage && (
-          <ImageCard
-            key={gifMessage.gifId}
-            width={gifMessage.width}
-            height={gifMessage.height}
-            ratio={Math.min(252 / gifMessage.height, 448 / gifMessage.width)}
-            url={gifUrl}
-            setImageToView={setImageToView}
-          />
-        )}
-      </div>
+      <>
+        {isLastRead && <div className="user_last_read_notify_skipped" />}
+        <div className="main_user_message_skipped">
+          {content && <TextCard content={content} />}
+          {imageMessages && (
+            <ImagesHelper
+              imageMessages={imageMessages}
+              setImageToView={setImageToView}
+            />
+          )}
+          {gifMessage && (
+            <ImageCard
+              key={gifMessage.gifId}
+              width={gifMessage.width}
+              height={gifMessage.height}
+              ratio={Math.min(252 / gifMessage.height, 448 / gifMessage.width)}
+              url={gifUrl}
+              setImageToView={setImageToView}
+            />
+          )}
+        </div>
+      </>
     );
   }
 
   return (
-    <div className="main_user_message">
-      <AvatarCard imageUrl={imageUrl} handleLookProfile={handleLookProfile} />
-      <div className="user_message_text">
-        <InfoCard
-          handleLookProfile={handleLookProfile}
-          messageTime={messageTime}
-          name={name}
-          role={role}
-          uniqueDeveloperStyle={uniqueDeveloperStyle}
-        />
-        {content && <TextCard content={content} />}
-        {imageMessages && (
-          <ImagesHelper
-            imageMessages={imageMessages}
-            setImageToView={setImageToView}
+    <>
+      {isLastRead && <div className="user_last_read_notify" />}
+      <div className="main_user_message">
+        <AvatarCard imageUrl={imageUrl} handleLookProfile={handleLookProfile} />
+        <div className="user_message_text">
+          <InfoCard
+            handleLookProfile={handleLookProfile}
+            messageTime={messageTime}
+            name={name}
+            role={role}
+            uniqueDeveloperStyle={uniqueDeveloperStyle}
           />
-        )}
-        {gifMessage && (
-          <ImageCard
-            key={gifMessage.gifId}
-            width={gifMessage.width}
-            height={gifMessage.height}
-            ratio={Math.min(252 / gifMessage.height, 448 / gifMessage.width)}
-            url={gifUrl}
-            setImageToView={setImageToView}
-          />
-        )}
+          {content && <TextCard content={content} />}
+          {imageMessages && (
+            <ImagesHelper
+              imageMessages={imageMessages}
+              setImageToView={setImageToView}
+            />
+          )}
+          {gifMessage && (
+            <ImageCard
+              key={gifMessage.gifId}
+              width={gifMessage.width}
+              height={gifMessage.height}
+              ratio={Math.min(252 / gifMessage.height, 448 / gifMessage.width)}
+              url={gifUrl}
+              setImageToView={setImageToView}
+            />
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -1,18 +1,27 @@
 import React, { useState, useEffect } from "react";
 import MessageCard from "./MessageCard";
 import { getSomeMessages } from "../../services/messages";
-import testImg from "../../images/test.png";
 import arrowDownImg from "../../images/arrowDown.png";
 
 const currentTime = Date.now();
-var alreadyInAction = false;
-var toggleScrollBar = false;
 var toggleJTP = false;
+var inNeedSetup = false;
+var alreadyInAction = false;
 
-const showOldMessageCard = (oldMessages, setImageToView, setProfileInfo) => {
+const showOldMessageCard = (
+  oldMessages,
+  setImageToView,
+  setProfileInfo,
+  lastReadMsgId
+) => {
   const res = [];
 
   for (var i = 0; i < oldMessages.length; i++) {
+    const isLastRead =
+      i + 1 === oldMessages.length
+        ? false
+        : oldMessages[i + 1].id === lastReadMsgId;
+
     res.push(
       <MessageCard
         key={oldMessages[i].id}
@@ -21,6 +30,7 @@ const showOldMessageCard = (oldMessages, setImageToView, setProfileInfo) => {
         setProfileInfo={setProfileInfo}
         currentTime={currentTime}
         lastMessage={i === oldMessages.length - 1 ? null : oldMessages[i + 1]}
+        isLastRead={isLastRead}
       />
     );
   }
@@ -29,14 +39,19 @@ const showOldMessageCard = (oldMessages, setImageToView, setProfileInfo) => {
 };
 
 const showNewMessageCard = (
+  oldMessages,
   newMessages,
   setImageToView,
   setProfileInfo,
-  lastOldMessage
+  lastOldMessage,
+  lastReadMsgId
 ) => {
   const res = [];
+  var lastReadDelay = oldMessages.length === 0 && lastReadMsgId === "";
 
   for (var i = 0; i < newMessages.length; i++) {
+    const isLastRead = lastReadDelay;
+
     res.push(
       <MessageCard
         key={newMessages[i].id}
@@ -45,8 +60,11 @@ const showNewMessageCard = (
         setProfileInfo={setProfileInfo}
         currentTime={currentTime}
         lastMessage={i === 0 ? lastOldMessage : newMessages[i - 1]}
+        isLastRead={isLastRead}
       />
     );
+
+    lastReadDelay = newMessages[i].id === lastReadMsgId;
   }
   return res;
 };
@@ -55,61 +73,57 @@ const MessagesUI = ({
   oldMessages,
   setOldMessages,
   newMessages,
+  setNewMessages,
+  lastReadNotify,
+  setLastReadNotify,
+  countUnread,
+  setCountUnread,
   setImageToView,
   setProfileInfo,
+  setScrollStatement,
+  activeConvoFriendId,
+  convoIdContainer,
+  convoOldMessages,
+  convoNewMessages,
+  convoLastRead,
 }) => {
-  const [mainStyle, setMainStyle] = useState("main_chatbox hidden_scroll");
+  const [mainStyle, setMainStyle] = useState("main_chatbox visible_scroll");
   const [oldHeight, setOldHeight] = useState(0);
   const [newHeight, setNewHeight] = useState(0);
   const [openingHeight, setOpeningHeight] = useState(0);
-  const [UIStyle, setUIStyle] = useState({ transition: "ease-in-out 0ms" });
+  const [loadingMessages, setLoadingMessages] = useState(false);
+
+  const avatar = convoIdContainer[activeConvoFriendId].imageUrl;
+  const name = convoIdContainer[activeConvoFriendId].name;
+  const lastReadMsgId =
+    lastReadNotify[convoIdContainer[activeConvoFriendId].convoId];
 
   useEffect(() => {
     const messagesUI = document.getElementById("auto-scroll");
     const JTP = document.getElementById("jump_chatbox");
+    const paddingChatbox = document.getElementById("padding_message_chatbox");
 
     const elemOld = document.getElementById("old_message_chatbox");
-    new ResizeObserver((changes, observer) => {
+    new ResizeObserver((changes) => {
       for (const change of changes) {
         if (change.contentRect.height === oldHeight) return;
         setOldHeight(change.contentRect.height);
-
-        if (change.contentRect.height >= messagesUI.offsetHeight) {
-          observer.disconnect();
-        }
       }
     }).observe(elemOld);
 
     const elemNew = document.getElementById("new_message_chatbox");
-    new ResizeObserver((changes, observer) => {
+    new ResizeObserver((changes) => {
       for (const change of changes) {
         if (change.contentRect.height === newHeight) return;
         setNewHeight(change.contentRect.height);
-
-        if (change.contentRect.height >= messagesUI.offsetHeight) {
-          observer.disconnect();
-        }
       }
     }).observe(elemNew);
 
     messagesUI.addEventListener("scroll", () => {
-      if (!toggleScrollBar) {
-        messagesUI.style.transition = "color 150ms ease-in-out";
-        messagesUI.style.color = "#696969d0";
-        toggleScrollBar = !toggleScrollBar;
-      }
-
-      const thisHeight = messagesUI.scrollTop;
-      setTimeout(() => {
-        if (thisHeight === messagesUI.scrollTop && toggleScrollBar) {
-          messagesUI.style.transition = "color 250ms ease-in-out";
-          messagesUI.style.color = "#69696900";
-          toggleScrollBar = !toggleScrollBar;
-        }
-      }, 400);
-
       const distance =
-        messagesUI.scrollHeight - messagesUI.clientHeight - thisHeight;
+        messagesUI.scrollHeight -
+        messagesUI.clientHeight -
+        messagesUI.scrollTop;
       const targetDistance = 4000;
       if (distance >= targetDistance && toggleJTP === false) {
         toggleJTP = true;
@@ -121,14 +135,21 @@ const MessagesUI = ({
     });
 
     setTimeout(() => {
-      setUIStyle({ transition: "ease-in-out 400ms" });
+      paddingChatbox.style.transition = "ease-in-out 350ms";
     }, 800);
   }, []);
 
   useEffect(() => {
-    if (oldMessages.length <= 25) {
-      const elem = document.getElementById("auto-scroll");
-      elem.scrollTop = elem.scrollHeight;
+    if (inNeedSetup) {
+      setTimeout(() => {
+        const elem = document.getElementById("auto-scroll");
+        elem.scrollTop = elem.scrollHeight - elem.clientHeight - 3;
+        setLoadingMessages(false);
+      }, 100);
+      setTimeout(() => {
+        inNeedSetup = false;
+        alreadyInAction = false;
+      }, 400);
     }
   }, [oldMessages]);
 
@@ -142,22 +163,91 @@ const MessagesUI = ({
     }
   }, [oldHeight, newHeight, openingHeight]);
 
+  useEffect(() => {
+    inNeedSetup = true;
+    alreadyInAction = false;
+    setLoadingMessages(true);
+    setScrollStatement("instant");
+
+    const paddingChatbox = document.getElementById("padding_message_chatbox");
+
+    const newmsgs =
+      convoNewMessages[convoIdContainer[activeConvoFriendId].convoId];
+    setNewMessages(newmsgs);
+    setOldHeight(0);
+    setNewHeight(0);
+    setOpeningHeight(0);
+
+    document.getElementById("load_next_button").disabled = false;
+
+    paddingChatbox.style.transition = "all 0ms ease-in-out";
+    document.getElementById("load_next_button").click();
+    setTimeout(() => {
+      paddingChatbox.style.transition = "all 350ms ease-in-out";
+    }, 1000);
+  }, [activeConvoFriendId]);
+
   const lastOldMessage = oldMessages.length === 0 ? null : oldMessages[0];
 
   const handleNextButton = () => {
-    getSomeMessages().then((res) => {
-      if (res === null) {
-        document.getElementById("load_next_button").disabled = true;
-        setOpeningHeight(302);
-      } else {
-        if (res.length <= 24) setOpeningHeight(302);
+    const convoId = convoIdContainer[activeConvoFriendId].convoId;
+    const convoOldMsgLength = convoOldMessages[convoId].length;
+    const convoNewMsgLength = convoNewMessages[convoId].length;
 
-        const elem = document.getElementById("auto-scroll");
-        elem.scrollTo({ top: elem.scrollTop + 5 });
-        setOldMessages(oldMessages.concat(res));
-        setTimeout(() => (alreadyInAction = false));
+    var msgId = "none";
+    if (convoOldMsgLength > 0) {
+      msgId = convoOldMessages[convoId][convoOldMsgLength - 1].id;
+    } else if (convoNewMsgLength > 0) {
+      msgId = convoNewMessages[convoId][0].id;
+    }
+
+    const data = { activeConvoId: convoId, targetMessageId: msgId };
+    if (inNeedSetup) {
+      if (convoOldMsgLength === 0) {
+        getSomeMessages(data).then((msgs) => {
+          const elem = document.getElementById("auto-scroll");
+          elem.scrollTo({ top: elem.scrollTop + 5 });
+
+          msgs && msgs.forEach((msg) => convoOldMessages[convoId].push(msg));
+          setOldMessages(convoOldMessages[convoId]);
+          if (!msgs || msgs.length < 25) {
+            setOpeningHeight(265);
+            document.getElementById("load_next_button").disabled = true;
+          }
+        });
+      } else {
+        const oldmsgs = [...convoOldMessages[convoId]];
+        setOldMessages(oldmsgs);
+
+        if (convoOldMsgLength % 25) {
+          setOpeningHeight(265);
+          document.getElementById("load_next_button").disabled = true;
+        }
+
+        setTimeout(() => {
+          const elem = document.getElementById("auto-scroll");
+          elem.scrollTop = elem.scrollHeight - elem.clientHeight - 1;
+        });
       }
-    });
+    } else {
+      getSomeMessages(data).then((msgs) => {
+        if (msgs && convoId === convoIdContainer[activeConvoFriendId].convoId) {
+          const elem = document.getElementById("auto-scroll");
+          elem.scrollTo({ top: elem.scrollTop + 7 });
+
+          setOldMessages(oldMessages.concat(msgs));
+          if (msgs.length < 25) {
+            setOpeningHeight(265);
+            document.getElementById("load_next_button").disabled = true;
+          }
+          msgs.forEach((msg) => convoOldMessages[convoId].push(msg)); // avoid double messages
+          alreadyInAction = false;
+        } else {
+          setOpeningHeight(265);
+          document.getElementById("load_next_button").disabled = true;
+        }
+      });
+    }
   };
 
   return (
@@ -165,13 +255,39 @@ const MessagesUI = ({
       className={mainStyle}
       id="auto-scroll"
       onScroll={() => {
-        const targetedScroll = document.getElementById("auto-scroll").scrollTop;
-        if (targetedScroll <= 250 && !alreadyInAction) {
+        const messagesUI = document.getElementById("auto-scroll");
+        const scrHei = messagesUI.scrollHeight;
+        const cliHei = messagesUI.clientHeight;
+        const scrTop = messagesUI.scrollTop;
+        if (!inNeedSetup && scrTop <= 275 && !alreadyInAction) {
           alreadyInAction = true;
           document.getElementById("load_next_button").click();
         }
+
+        const convoId = convoIdContainer[activeConvoFriendId].convoId;
+        if (scrHei - cliHei - scrTop <= 5) {
+          const newLen = convoNewMessages[convoId].length;
+          const oldLen = convoOldMessages[convoId].length;
+
+          if (newLen !== 0) {
+            convoLastRead[convoId] = convoNewMessages[convoId][newLen - 1].id;
+          } else if (oldLen !== 0) {
+            convoLastRead[convoId] = convoOldMessages[convoId][0].id;
+          } else {
+            convoLastRead[convoId] = "";
+          }
+
+          if (countUnread) {
+            setCountUnread(0);
+          }
+
+          if (convoLastRead[convoId] !== lastReadNotify[convoId]) {
+            setLastReadNotify({ ...convoLastRead });
+          }
+        }
       }}
     >
+      {loadingMessages && <div className="loading_chatbox" />}
       <label
         id="jump_chatbox"
         className="jump_chatbox"
@@ -198,29 +314,29 @@ const MessagesUI = ({
 
       <div
         style={{
-          minHeight: `calc(100% - 8px - ${oldHeight}px - ${newHeight}px - ${openingHeight}px )`,
-          ...UIStyle,
+          minHeight: `max(0px, calc(100% - 8px - ${oldHeight}px - ${newHeight}px - ${openingHeight}px ))`,
         }}
         id="padding_message_chatbox"
         className="padding_message_chatbox"
-        onClick={() => {
-          document.getElementById("load_next_button").click();
-        }}
       />
-
       {openingHeight !== 0 && (
         <div id="opening_chatbox" className="opening_chatbox">
           <img
             className="opening_chatbox_avatar"
-            src={testImg}
+            src={avatar}
             alt="opening_avatar"
           />
-          <p className="opening_chatbox_title">Fest Group</p>
+          <p className="opening_chatbox_title">{name}</p>
         </div>
       )}
 
       <div id="old_message_chatbox" className="old_message_chatbox">
-        {showOldMessageCard(oldMessages, setImageToView, setProfileInfo)}
+        {showOldMessageCard(
+          oldMessages,
+          setImageToView,
+          setProfileInfo,
+          lastReadMsgId
+        )}
       </div>
       <button
         style={{ top: `calc(${oldHeight}px + ${newHeight}px - 20px)` }}
@@ -230,10 +346,12 @@ const MessagesUI = ({
       />
       <div id="new_message_chatbox" className="new_message_chatbox">
         {showNewMessageCard(
+          oldMessages,
           newMessages,
           setImageToView,
           setProfileInfo,
-          lastOldMessage
+          lastOldMessage,
+          lastReadMsgId
         )}
       </div>
       <div className="main_chatbox_breaking" />

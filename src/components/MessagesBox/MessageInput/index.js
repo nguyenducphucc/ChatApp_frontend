@@ -20,6 +20,12 @@ const MessageInput = ({
   newMessages,
   setNewMessages,
   setErrorMessage,
+  convoIdContainer,
+  activeConvoFriendId,
+  convoNewMessages,
+  convoLastRead,
+  setLastReadNotify,
+  setIsSocketUpdate,
 }) => {
   const [toggleOpen, setToggleOpen] = useState(true);
   const [messageToSubmit, setMessageToSubmit] = useState("");
@@ -135,6 +141,12 @@ const MessageInput = ({
         imageMessageFiles={imageMessageFiles}
         setImageMessageFiles={setImageMessageFiles}
         setErrorMessage={setErrorMessage}
+        convoIdContainer={convoIdContainer}
+        activeConvoFriendId={activeConvoFriendId}
+        convoNewMessages={convoNewMessages}
+        convoLastRead={convoLastRead}
+        setLastReadNotify={setLastReadNotify}
+        setIsSocketUpdate={setIsSocketUpdate}
       />
 
       {imageMessageUrls.length === 0 ? null : (
@@ -192,7 +204,13 @@ const MessageInput = ({
           socket={socket}
           newMessages={newMessages}
           setNewMessages={setNewMessages}
+          convoIdContainer={convoIdContainer}
+          activeConvoFriendId={activeConvoFriendId}
+          convoNewMessages={convoNewMessages}
           setErrorMessage={setErrorMessage}
+          convoLastRead={convoLastRead}
+          setLastReadNotify={setLastReadNotify}
+          setIsSocketUpdate={setIsSocketUpdate}
         />
       </div>
     </div>

@@ -14,7 +14,18 @@ var mainStyle = { minHeight: "40px" };
 var fetchGifs = (offset) => gf.trending({ offset, limit: 10 });
 var key = uuidv4();
 
-const Giphy = ({ socket, newMessages, setNewMessages, setErrorMessage }) => {
+const Giphy = ({
+  socket,
+  newMessages,
+  setNewMessages,
+  convoIdContainer,
+  activeConvoFriendId,
+  convoNewMessages,
+  setErrorMessage,
+  convoLastRead,
+  setLastReadNotify,
+  setIsSocketUpdate,
+}) => {
   const [toggleOpen, setToggleOpen] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -27,12 +38,11 @@ const Giphy = ({ socket, newMessages, setNewMessages, setErrorMessage }) => {
   }
 
   useEffect(() => {
-    var giphyContainer = document.getElementById("gifContainer");
     var giphyInput = document.getElementById("gif_input");
     var giphyIcon = document.getElementById("gif_icon");
 
     window.addEventListener("mouseup", (e) => {
-      if (!giphyContainer.contains(e.target) && e.target !== giphyIcon) {
+      if (e.target !== giphyIcon && e.target !== giphyInput) {
         setToggleOpen(false);
       }
     });
@@ -58,6 +68,8 @@ const Giphy = ({ socket, newMessages, setNewMessages, setErrorMessage }) => {
 
   const handleGifClick = (gif, e) => {
     e.preventDefault();
+    const convoId = convoIdContainer[activeConvoFriendId].convoId;
+
     verifyToken()
       .then(({ id }) => {
         const newMessage = {
@@ -68,12 +80,22 @@ const Giphy = ({ socket, newMessages, setNewMessages, setErrorMessage }) => {
             height: gif.images.original.height,
           },
           userId: id,
+          convoId,
         };
 
         createMessage(newMessage)
           .then((res) => {
+            res.id = res._id;
+            delete res._id;
+            delete res.__v;
+
+            convoLastRead[convoId] = res.id;
+            setLastReadNotify({ ...convoLastRead });
+            setIsSocketUpdate("update");
+
             setScrollStatement("force");
             setNewMessages(newMessages.concat(res));
+            convoNewMessages[convoId].push(res);
             socket.emit("message", res);
           })
           .catch((err) => {
@@ -99,6 +121,7 @@ const Giphy = ({ socket, newMessages, setNewMessages, setErrorMessage }) => {
           className="gif_input"
           value={search}
           placeholder="Search..."
+          autoComplete="off"
           onChange={handleChange}
         />
 
