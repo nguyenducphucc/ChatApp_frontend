@@ -63,15 +63,15 @@ const MessagesBox = ({ user, setUser, setErrorMessage }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setInterval(() => {
-      console.log("---------------------------");
-      console.log("lastRead", convoLastRead);
-      console.log("friend", friendsState);
-      console.log("onlineFriend", onlineFriendsState);
-      console.log("convoOldMessages", convoOldMessages);
-      console.log("convoNewMessages", convoNewMessages);
-      console.log("convoIdContainer", convoIdContainer);
-    }, 5000);
+//     setInterval(() => {
+//       console.log("---------------------------");
+//       console.log("lastRead", convoLastRead);
+//       console.log("friend", friendsState);
+//       console.log("onlineFriend", onlineFriendsState);
+//       console.log("convoOldMessages", convoOldMessages);
+//       console.log("convoNewMessages", convoNewMessages);
+//       console.log("convoIdContainer", convoIdContainer);
+//     }, 5000);
 
     socket.on("newConnection", () => {
       if (id !== null) socket.emit("initRoom", id);
